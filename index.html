@@ -298,72 +298,113 @@
 <!-- Timeline Section -->
 <section id="timeline" class="py-16 px-4 bg-gray-900 text-white">
   <div class="max-w-5xl mx-auto">
-    <h2 class="text-3xl font-bold mb-6">Career Overview Chart</h2>
-    <div class="chart-container">
-      <canvas id="myLineChart"></canvas>
-    </div>
+    <h2 class="text-3xl font-bold mb-6">Career Overview</h2>
+    <canvas id="careerChart"></canvas>
   </div>
 </section>
 
-<!-- Chart.js Library -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Chart Config -->
 <script>
+const ctx = document.getElementById('careerChart').getContext('2d');
+
 const data = {
-  labels: ['2016', '2019', '2021', '2022', '2024'],
+  labels: ['2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025'],
   datasets: [
     {
-      label: 'Education Scores',
-      data: [79.4, 70.06, 7.25, 8.07],
+      label: 'Education Progress (Normalized %)',
+      data: [79.4, null, 65, 70.06, null, null, 72.5, null, 80.7, null],
       borderColor: '#4BC0C0',
       backgroundColor: 'rgba(75, 192, 192, 0.2)',
       fill: true,
-      tension: 0.4,
-      borderWidth: 2,
+      tension: 0.3,
       pointBackgroundColor: '#4BC0C0',
     },
     {
-      label: 'Work Experience Duration (Months)',
-      data: [0, 0, 3, 16, 12],
-      borderColor: '#FF6347',
-      backgroundColor: 'rgba(255, 99, 71, 0.2)',
+      label: 'Experience Duration (Months)',
+      data: [0, 0, 0, 0, 0, 8, 16, 10, 12, 0], // Internship+Work durations
+      borderColor: '#FF6384',
+      backgroundColor: 'rgba(255, 99, 132, 0.2)',
       fill: false,
-      tension: 0.4,
-      borderWidth: 2,
-      pointBackgroundColor: '#FF6347',
-    }
+      tension: 0.3,
+      pointBackgroundColor: '#FF6384',
+    },
+    {
+      label: 'Certifications Earned',
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 3, 2], // Certifications in 2024 & 2025
+      borderColor: '#FFCE56',
+      backgroundColor: 'rgba(255, 206, 86, 0.2)',
+      fill: true,
+      tension: 0.3,
+      pointBackgroundColor: '#FFCE56',
+    },
+    {
+      label: 'Projects Completed',
+      data: [0, 0, 1, 1, 1, 2, 2, 0, 0, 0], // Projects from 2018-2022
+      borderColor: '#36A2EB',
+      backgroundColor: 'rgba(54, 162, 235, 0.2)',
+      fill: true,
+      tension: 0.3,
+      pointBackgroundColor: '#36A2EB',
+    },
+    {
+      label: 'Internships Completed',
+      data: [0, 0, 0, 0, 0, 2, 1, 0, 0, 0], // Internships in 2021 & 2022
+      borderColor: '#8E44AD',
+      backgroundColor: 'rgba(142, 68, 173, 0.2)',
+      fill: false,
+      tension: 0.3,
+      pointBackgroundColor: '#8E44AD',
+    },
   ]
 };
 
-const ctx = document.getElementById('myLineChart').getContext('2d');
-const myLineChart = new Chart(ctx, {
-  type: 'line',
-  data: data,
-  options: {
-    responsive: true,
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: 'Year'
-        }
-      },
-      y: {
-        title: {
-          display: true,
-          text: 'Score / Duration (Months)'
-        },
-        beginAtZero: true
-      }
-    },
-    plugins: {
+const options = {
+  responsive: true,
+  scales: {
+    x: {
       title: {
         display: true,
-        text: 'Education & Career Progression'
+        text: 'Year'
+      }
+    },
+    y: {
+      beginAtZero: true,
+      title: {
+        display: true,
+        text: 'Normalized Progress'
       }
     }
+  },
+  plugins: {
+    title: {
+      display: true,
+      text: 'Atharv Pawar | Career Progression (2016-2025)'
+    },
+    tooltip: {
+      callbacks: {
+        label: function(context) {
+          let label = context.dataset.label || '';
+          if (label) label += ': ';
+          label += context.parsed.y;
+          if (context.dataset.label === 'Certifications Earned') label += ' certificates';
+          if (context.dataset.label === 'Projects Completed') label += ' project(s)';
+          if (context.dataset.label === 'Internships Completed') label += ' internship(s)';
+          if (context.dataset.label === 'Experience Duration (Months)') label += ' months';
+          return label;
+        }
+      }
+    },
+    legend: {
+      position: 'bottom'
+    }
   }
+};
+
+const careerChart = new Chart(ctx, {
+  type: 'line',
+  data: data,
+  options: options
 });
 </script>
 <!-- Contact -->
